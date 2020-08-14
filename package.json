@@ -3,13 +3,15 @@
     "scripts": {
         "start": "node server.js"
     },
-	"keywords": [],
-	"license": "ISC",
+    "keywords": [],
+    "license": "ISC",
     "dependencies": {
         "body-parser": "^1.19.0",
+        "bufferutil": "^4.0.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "mongoose": "^5.9.27",
+        "utf-8-validate": "^5.0.2",
         "ws": "^7.3.1"
     }
 }
