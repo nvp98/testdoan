@@ -1,8 +1,7 @@
 {
     "main": "server.js",
     "scripts": {
-        "start": "node server.js",
-        "heroku-postbuild": "cd client && NPM_CONFIG_PRODUCTION=false && npm install && npm run build"
+        "start": "node server.js"
     },
 	"keywords": [],
 	"license": "ISC",
