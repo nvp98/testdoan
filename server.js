@@ -2,6 +2,7 @@
 var bodyParser = require("body-parser");
 const cors = require("cors");
 const express = require('express');
+const app = express();
 app.use(cors());
 const { Server } = require('ws');
 
@@ -18,7 +19,7 @@ const url = "mongodb+srv://kiki:111@cluster0.ewazt.mongodb.net/doan?retryWrites=
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 const s = new Server({ server });
 
 let dbo;
