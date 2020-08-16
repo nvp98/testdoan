@@ -1,27 +1,47 @@
-'use strict';
 var bodyParser = require("body-parser");
+const express = require("express"); //express framework to have a higher level of methods
 const cors = require("cors");
-const express = require('express');
-const app = express();
+const app = express(); //assign app variable the express class/method
 app.use(cors());
-const { Server } = require('ws');
+const personRoutes = express.Router();
 
-const PORT = process.env.PORT || 3000;
-const INDEX = '/index.html';
-
-const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
+var http = require("http");
+var path = require("path");
+//mongodb
 var MongoClient = require("mongodb").MongoClient;
 //var url = "mongodb://localhost:27017/";
 const url = "mongodb+srv://kiki:111@cluster0.ewazt.mongodb.net/doan?retryWrites=true&w=majority";
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const server = http.createServer(app); //create a server
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-const s = new Server({ server });
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+//***************this snippet gets the local ip of the node.js server. copy this ip to the client side code and add ':3000' *****
+//****************exmpl. 192.168.56.1---> var sock =new WebSocket("ws://192.168.56.1:3000");*************************************
+require("dns").lookup(require("os").hostname(), function (err, add, fam) {
+  console.log("addr: " + add);
+});
+/**********************websocket setup**************************************************************************************/
+//var expressWs = require('express-ws')(app,server);
+const WebSocket = require("ws");
+const s = new WebSocket.Server({ server });
+//when browser sends get request, send html file to browser
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, "client/build")));
+// viewed at http://localhost:30000
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
 let dbo;
 
 MongoClient.connect(url, function (err, db) {
@@ -183,3 +203,5 @@ s.on("connection", function (ws, req) {
     console.log("lost one client");
   });
 });
+const port = process.env.PORT || 3000;
+server.listen(port);
